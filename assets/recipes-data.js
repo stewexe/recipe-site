@@ -11,10 +11,10 @@
    ============================================================ */
 
 const CATEGORY_COLORS = {
-  Breakfast: "var(--mustard)",
-  Mains: "var(--teal)",
-  Sweets: "var(--rust)",
-  Sides: "var(--sage)",
+  Breakfast: "var(--amber)",
+  Mains: "var(--blue)",
+  Sweets: "var(--pink)",
+  Sides: "var(--green)",
 };
 
 const RECIPES = [

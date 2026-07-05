@@ -22,5 +22,5 @@ function formatAmount(n) {
 }
 
 function categoryColor(category) {
-  return CATEGORY_COLORS[category] || "var(--ink-soft)";
+  return CATEGORY_COLORS[category] || "var(--text-muted)";
 }
