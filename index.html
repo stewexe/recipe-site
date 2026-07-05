@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Recipe Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <p class="eyebrow">A living collection</p>
+    <h1 class="brand">The Recipe Box</h1>
+    <p class="brand-sub">Recipes worth keeping, filed by hand.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="filters" id="filters"></div>
+  <div class="card-grid" id="grid"></div>
+  <div class="empty-state" id="empty" style="display:none">No recipes filed under this tab yet.</div>
+</main>
+
+<script src="assets/recipes-data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  const grid = document.getElementById("grid");
+  const filtersEl = document.getElementById("filters");
+  const emptyEl = document.getElementById("empty");
+  let activeFilter = "All";
+
+  function renderFilters() {
+    const categories = ["All", ...new Set(RECIPES.map(r => r.category))];
+    filtersEl.innerHTML = categories.map(cat => {
+      const dot = cat === "All"
+        ? ""
+        : `<span class="dot" style="background:${categoryColor(cat)}"></span>`;
+      return `<button class="filter-btn${cat === activeFilter ? " active" : ""}" data-cat="${cat}">${dot}${cat}</button>`;
+    }).join("");
+
+    filtersEl.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeFilter = btn.dataset.cat;
+        renderFilters();
+        renderGrid();
+      });
+    });
+  }
+
+  function renderGrid() {
+    const list = RECIPES
+      .filter(r => activeFilter === "All" || r.category === activeFilter)
+      .sort((a, b) => a.number - b.number);
+
+    emptyEl.style.display = list.length ? "none" : "block";
+
+    grid.innerHTML = list.map(r => `
+      <a class="rcard" href="recipe/index.html?id=${encodeURIComponent(r.id)}">
+        <span class="tab" style="background:${categoryColor(r.category)}">${r.category}</span>
+        <p class="catalog-no">No. ${String(r.number).padStart(3, "0")}</p>
+        <h3>${r.title}</h3>
+        <p class="tagline">${r.tagline}</p>
+        <div class="meta-row">
+          <span>⏱ ${r.time}</span>
+          <span>${r.difficulty}</span>
+          <span>serves ${r.servingsBase}</span>
+        </div>
+      </a>
+    `).join("");
+  }
+
+  renderFilters();
+  renderGrid();
+</script>
+
+</body>
+</html>
